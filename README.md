@@ -15,5 +15,5 @@ A date un test simple a ete fait, il faut maintenant reproduire le comportement 
 
 #### Server
 Le serveur se trouve dans le dossier serveur, il faut avoir un terminal ouvert a cote et : 
-```python serveur_q_a.py```
+```python server/serveur.py```
 Puis attendre le `Modele loaded`
