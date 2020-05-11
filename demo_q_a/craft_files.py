@@ -7,8 +7,8 @@ import glob
 import torch
 import re
 from rich.progress import track
-# LANG = "fr"
-LANG = "en"
+LANG = "fr"
+# LANG = "en"
 
 try:
     os.remove(f"./all_{LANG}/content_{LANG}.txt")
@@ -19,7 +19,7 @@ for file in glob.iglob(f"./{LANG}/*"):
     os.remove(file)
 
 # model = "illuin/camembert-large-fquad"
-model = "camembert-base"
+model = "camembert/camembert-large"
 # model = "bert-large-uncased-whole-word-masking-finetuned-squad"
 tokenizer = AutoTokenizer.from_pretrained(model)
 # bertizer = AutoModelForQuestionAnswering.from_pretrained(model)

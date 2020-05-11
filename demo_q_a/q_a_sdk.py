@@ -3,15 +3,15 @@
 import torch
 import numpy as np
 from rich import print
-from typing import TypedDict, List
+# from typing import TypedDict, List
 
 
-class Result(TypedDict):
-    score: float
-    ctx: str
-    answer: str
-    start: float
-    end: float
+# class Result(TypedDict):
+#     score: float
+#     ctx: str
+#     answer: str
+#     start: float
+#     end: float
 
 
 def cosine_distance(a: np.ndarray, b: np.ndarray) -> float:
@@ -38,11 +38,11 @@ def get_answer(question: str, dico, tokenizer, embedder, q_a_pipeline):
             Cos_title = cosine_distance(emb_q, emb_title)
             Cos_content = cosine_distance(emb_q, emb_content)
 
-            embs.append((L2_title, source))
+            embs.append((Cos_title, source))
 
     top_3 = sorted(embs)[:3]
 
-    resultats: List[Result] = []
+    resultats = []
     for (score, source) in top_3:
         ctx = dico[source]["content_fr"]
         title = dico[source]["title_fr"]
@@ -50,7 +50,7 @@ def get_answer(question: str, dico, tokenizer, embedder, q_a_pipeline):
 
         big_left = max(0, res["start"]-500)
         big_right = min(res["end"]+500, len(ctx))
-        dic_res: Result = {}
+        dic_res = {}
         dic_res["score_doc"] = score
         dic_res["score"] = res["score"]
         dic_res["ctx"] = ctx[big_left:big_right]
