@@ -4,11 +4,10 @@ from transformers import (AutoModel, AutoModelForQuestionAnswering,
 import os
 
 models = {
-    "Camembert_Q_A": "illuin/camembert-large-fquad",
-    # "Camembert": "camembert-base",
-    "Camembert": "camembert/camembert-large",
-    "Bert": "bert-large-uncased",
-    "Bert_Q_A": "bert-large-uncased-whole-word-masking-finetuned-squad"
+    "camembert_Q_A": "illuin/camembert-large-fquad",
+    "camembert": "camembert/camembert-large",
+    "bert": "bert-large-uncased",
+    "bert_Q_A": "bert-large-uncased-whole-word-masking-finetuned-squad"
 }
 
 for folder, model in models.items():
@@ -16,7 +15,7 @@ for folder, model in models.items():
         os.mkdir(f"./weights/{folder}")
 
 if not os.path.exists("./weights/Camembert_Q_A/pytorch_model.bin"):
-    QA_MODEL_NAME_FR = "illuin/camembert-large-fquad"
+    QA_MODEL_NAME_FR = models["camembert_Q_A"]
     QA_TOK_FR = AutoTokenizer.from_pretrained(QA_MODEL_NAME_FR)
     QA_MODEL_FR = CamembertForQuestionAnswering.from_pretrained(
         QA_MODEL_NAME_FR)
@@ -27,7 +26,7 @@ if not os.path.exists("./weights/Camembert_Q_A/pytorch_model.bin"):
     del QA_MODEL_FR
 
 if not os.path.exists("./weights/Camembert/pytorch_model.bin"):
-    EMB_MODEL_NAME_FR = "camembert-base"
+    EMB_MODEL_NAME_FR = models["camembert"]
     EMB_TOK_FR = AutoTokenizer.from_pretrained(EMB_MODEL_NAME_FR)
     EMB_FR = AutoModel.from_pretrained(EMB_MODEL_NAME_FR)
     EMB_FR.save_pretrained("./weights/Camembert")
@@ -36,7 +35,7 @@ if not os.path.exists("./weights/Camembert/pytorch_model.bin"):
     del EMB_FR
 
 if not os.path.exists("./weights/Bert_Q_A/pytorch_model.bin"):
-    QA_MODEL_NAME_EN = "bert-large-uncased-whole-word-masking-finetuned-squad"
+    QA_MODEL_NAME_EN = models["bert_Q_A"]
     QA_TOK_EN = AutoTokenizer.from_pretrained(QA_MODEL_NAME_EN)
     QA_MODEL_EN = AutoModelForQuestionAnswering.from_pretrained(
         QA_MODEL_NAME_EN)
@@ -47,7 +46,7 @@ if not os.path.exists("./weights/Bert_Q_A/pytorch_model.bin"):
     del QA_TOK_EN
 
 if not os.path.exists("./weights/Bert/pytorch_model.bin"):
-    EMB_MODEL_NAME_EN = "bert-large-uncased"
+    EMB_MODEL_NAME_EN = models["bert"]
     EMB_TOK_EN = AutoTokenizer.from_pretrained(EMB_MODEL_NAME_EN)
     EMB_EN = AutoModel.from_pretrained(EMB_MODEL_NAME_EN)
     EMB_EN.save_pretrained("./weights/Bert")
