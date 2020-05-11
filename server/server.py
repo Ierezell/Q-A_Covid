@@ -13,6 +13,7 @@ preload_weights()
 
 DEVICE = torch.device(
     "cuda") if torch.cuda.is_available() else torch.device("cpu")
+MAX_DOCS  = 25
 
 
 @app.get('status')
@@ -23,35 +24,42 @@ async def get_info(req):
 @app.post("/embeddings")
 async def get_embedding(request):
     lang = request.json.get('lang')
-    text = request.json.get('text')
+    documents = request.json.get('documents')
+
+    if len(documents) > MAX_DOCS :
+        abort(400, f'Too many documents to embed, please send no more than {MAX_DOCS }')
+
     try:
         tokenizer, embedder, _ = get_models_for_lang(lang)
     except RuntimeError:
         abort(400, 'Model not loaded')
 
-    splited_text = np.array(text.split(" "))
-    splitted_chunk_text = np.array_split(splited_text,
-                                         (len(splited_text)//200)+1)
-    chunk_text = [" ".join(s) for s in splitted_chunk_text]
-    try:
-        with torch.no_grad():
-            input_tensor = tokenizer.batch_encode_plus(chunk_text,
-                                                       pad_to_max_length=True,
-                                                       return_tensors="pt")
-            last_hidden, pool = embedder(input_tensor["input_ids"].to(DEVICE),
-                                         input_tensor["attention_mask"].to(DEVICE))
-            emb_text = torch.mean(torch.mean(last_hidden, axis=1), axis=0)
-            emb_text = emb_text.squeeze().detach().cpu().data.numpy().tolist()
-    except RuntimeError as e:
-        return json({"error": f"Be careful, special strings will be tokenized in many pieces and the model will not be able to fit : {e}"})
-    return json({"embeddings": emb_text})
+    embeddings = []
+    for doc in documents:
+        splited_text = np.array(doc.split(" "))
+        splitted_chunk_text = np.array_split(splited_text,
+                                            (len(splited_text)//200)+1)
+        chunk_text = [" ".join(s) for s in splitted_chunk_text]
+        try:
+            with torch.no_grad():
+                input_tensor = tokenizer.batch_encode_plus(chunk_text,
+                                                        pad_to_max_length=True,
+                                                        return_tensors="pt")
+                last_hidden, pool = embedder(input_tensor["input_ids"].to(DEVICE),
+                                            input_tensor["attention_mask"].to(DEVICE))
+                emb_text = torch.mean(torch.mean(last_hidden, axis=1), axis=0)
+                emb_text = emb_text.squeeze().detach().cpu().data.numpy().tolist()
+                embeddings.append(emb_text)
+        except RuntimeError as e:
+            return json({"error": f"Be careful, special strings will be tokenized in many pieces and the model will not be able to fit : {e}"})
+    return json({"embeddings": embeddings})
 
 
 @app.post("/answers")
 async def get_answer(request):
     lang = request.json.get('lang')
     question = normalize("NFC", request.json.get('question'))
-    documents = [normalize("NFC", d) for d in request.json.get('docs')]
+    documents = [normalize("NFC", d) for d in request.json.get('documents')]
     try:
         _, __, q_a_pipeline = get_models_for_lang(lang)
     except RuntimeError:
