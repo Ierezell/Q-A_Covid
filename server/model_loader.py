@@ -69,7 +69,7 @@ def get_models_for_lang(lang: str):
 def preload_weights():
     models = {
         "Camembert_Q_A": "illuin/camembert-large-fquad",
-        "Camembert": "camembert-base",
+        "Camembert": "camembert/camembert-large",
         "Bert": "bert-large-uncased",
         "Bert_Q_A": "bert-large-uncased-whole-word-masking-finetuned-squad"
     }
@@ -92,7 +92,7 @@ def preload_weights():
         del QA_MODEL_FR
 
     if not os.path.exists(f'{WEIGHTS_PATH}/Camembert/pytorch_model.bin'):
-        EMB_MODEL_NAME_FR = "camembert-base"
+        EMB_MODEL_NAME_FR = "camembert/camembert-large"
         EMB_TOK_FR = AutoTokenizer.from_pretrained(EMB_MODEL_NAME_FR)
         EMB_FR = AutoModel.from_pretrained(EMB_MODEL_NAME_FR)
         EMB_FR.save_pretrained(f'{WEIGHTS_PATH}/Camembert')
