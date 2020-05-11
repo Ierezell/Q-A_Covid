@@ -10,10 +10,6 @@ DEVICE = torch.device(
     "cuda") if torch.cuda.is_available() else torch.device("cpu")
 DEVICE_PIPELINE = 0 if torch.cuda.is_available() else -1
 
-DEVICE = torch.device("cpu")
-DEVICE_PIPELINE = -1
-
-
 WEIGHTS_PATH = './weights'
 QA_MODEL_NAME_FR = f'{WEIGHTS_PATH}/Camembert_Q_A'
 EMB_MODEL_NAME_FR = f'{WEIGHTS_PATH}/Camembert'
