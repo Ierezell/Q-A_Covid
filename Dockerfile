@@ -1,11 +1,10 @@
-# FROM python:3
 FROM pytorch/pytorch:latest
 
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
 COPY ./server ./
-COPY ./server/weights ./weights
+COPY ./weights ./weights
 RUN pip install --no-cache-dir -r requirements.txt
 
 
