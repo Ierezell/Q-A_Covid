@@ -38,26 +38,27 @@ def get_answer(question: str, dico, tokenizer, embedder, q_a_pipeline):
             Cos_title = cosine_distance(emb_q, emb_title)
             Cos_content = cosine_distance(emb_q, emb_content)
 
-            embs.append((L2_content+Cos_content, source))
+            embs.append((L2_title, source))
 
     top_3 = sorted(embs)[:3]
 
     resultats: List[Result] = []
-    for i, (score, source) in enumerate(top_3):
-        try:
-            ctx = dico[source]["content_fr"]
-        except KeyError:
-            print(source)
+    for (score, source) in top_3:
+        ctx = dico[source]["content_fr"]
+        title = dico[source]["title_fr"]
         res = q_a_pipeline({'question': question, 'context': ctx})
 
         big_left = max(0, res["start"]-500)
         big_right = min(res["end"]+500, len(ctx))
         dic_res: Result = {}
+        dic_res["score_doc"] = score
         dic_res["score"] = res["score"]
         dic_res["ctx"] = ctx[big_left:big_right]
         dic_res["answer"] = res["answer"]
         dic_res["start"] = res["start"]-big_left
         dic_res["end"] = res["end"]-big_left
+        dic_res["source"] = source
+        dic_res["title"] = title
         resultats.append(dic_res)
     return resultats
 
@@ -67,6 +68,9 @@ def print_results(question, top_3):
     print(f"[light_cyan3 underline]{question}[/light_cyan3 underline]")
     for data in top_3:
         start_answer, end_answer = data["start"], data["end"]
+        print("Source :", data['source'])
+        print("Title :", data['title'])
+        print("Score Doc :", data['score_doc'])
         print("\tContexte:", data['ctx'][:start_answer], end=" ")
         print(
             f"[yellow]{data['ctx'][start_answer:end_answer]}[/yellow]", end=" ")

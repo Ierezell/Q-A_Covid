@@ -28,16 +28,16 @@ questions = [
     # "J'ai peur pour mon conjoint qui travaille dans la santé",
     # "Comment fonctionnent les services de garde d'urgence ?",
     # "Dois-je envoyer mon enfant à l'école ?",
-"si mon employeur offre le télétravail, suis-je obligé de retourner au bureau?",
-"ma région est-elle déconfinée?",
-"J'ai peur pour mon conjoint qui travaille dans la santé",
-"Mon enfant a peur de retourner a l'école",
-"Ma conjointe est immunosupprimée doit-elle retourner au travail ? ",
-"Est-ce que je peux me fabriquer un masque ?",
-"Quels secteurs pourront reprendre leurs activités?",
-"J'ai vu un client tousser à l'épicerie devrais-je lui dire de quitter ?",
-"quand est-ce que j’vais pouvoir lancer la construction de ma maison",
-"est-ce que je peux visiter des appartements malgré la pandemie"
+    # "si mon employeur offre le télétravail, suis-je obligé de retourner au bureau?",
+    # "ma région est-elle déconfinée?",
+    # "J'ai peur pour mon conjoint qui travaille dans la santé",
+    # "Mon enfant a peur de retourner a l'école",
+    # "Ma conjointe est immunosupprimée doit-elle retourner au travail ? ",
+    # "Est-ce que je peux me fabriquer un masque ?",
+    # "Quels secteurs pourront reprendre leurs activités?",
+    # "J'ai vu un client tousser à l'épicerie devrais-je lui dire de quitter ?",
+    # "quand est-ce que j’vais pouvoir lancer la construction de ma maison",
+    # "est-ce que je peux visiter des appartements malgré la pandemie"
 ]
 
 with open("covid_data.json", "r") as file:

@@ -11,6 +11,10 @@ app = Sanic("Covid_NLU")
 preload_weights()
 
 
+DEVICE = torch.device(
+    "cuda") if torch.cuda.is_available() else torch.device("cpu")
+
+
 @app.get('status')
 async def get_info(req):
     return json({'status': get_loading_status()})
@@ -34,8 +38,8 @@ async def get_embedding(request):
             input_tensor = tokenizer.batch_encode_plus(chunk_text,
                                                        pad_to_max_length=True,
                                                        return_tensors="pt")
-            last_hidden, pool = embedder(input_tensor["input_ids"],
-                                         input_tensor["attention_mask"])
+            last_hidden, pool = embedder(input_tensor["input_ids"].to(DEVICE),
+                                         input_tensor["attention_mask"].to(DEVICE))
             emb_text = torch.mean(torch.mean(last_hidden, axis=1), axis=0)
             emb_text = emb_text.squeeze().detach().cpu().data.numpy().tolist()
     except RuntimeError as e:
