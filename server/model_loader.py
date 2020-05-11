@@ -37,19 +37,19 @@ def load_models():
     del QA_MODEL_FR
     print(":floppy_disk: [green]Loaded FR models[/green]")
 
-    # print(":floppy_disk: [yellow]Loading EN model[/yellow]", end="")
-    # print(f"on [blue]{DEVICE}[/blue]...")
-    # QA_TOK_EN = AutoTokenizer.from_pretrained(QA_MODEL_NAME_EN)
-    # QA_MODEL_EN = AutoModelForQuestionAnswering.from_pretrained(
-    #     QA_MODEL_NAME_EN)
-    # _LOADED_MODELS['EN'] = {
-    #     'QNA': QuestionAnsweringPipeline(model=QA_MODEL_EN, tokenizer=QA_TOK_EN, device=DEVICE_PIPELINE),
-    #     'TOK': AutoTokenizer.from_pretrained(EMB_MODEL_NAME_EN),
-    #     'EMB': AutoModel.from_pretrained(EMB_MODEL_NAME_EN).to(DEVICE)
-    # }
-    # del QA_TOK_EN
-    # del QA_MODEL_EN
-    # print(":floppy_disk: [green]Loaded EN models[/green]")
+    print(":floppy_disk: [yellow]Loading EN model[/yellow]", end="")
+    print(f"on [blue]{DEVICE}[/blue]...")
+    QA_TOK_EN = AutoTokenizer.from_pretrained(QA_MODEL_NAME_EN)
+    QA_MODEL_EN = AutoModelForQuestionAnswering.from_pretrained(
+        QA_MODEL_NAME_EN)
+    _LOADED_MODELS['EN'] = {
+        'QNA': QuestionAnsweringPipeline(model=QA_MODEL_EN, tokenizer=QA_TOK_EN, device=DEVICE_PIPELINE),
+        'TOK': AutoTokenizer.from_pretrained(EMB_MODEL_NAME_EN),
+        'EMB': AutoModel.from_pretrained(EMB_MODEL_NAME_EN).to(DEVICE)
+    }
+    del QA_TOK_EN
+    del QA_MODEL_EN
+    print(":floppy_disk: [green]Loaded EN models[/green]")
 
 
 def get_loading_status():
@@ -82,8 +82,8 @@ def preload_weights():
         QA_TOK_FR = AutoTokenizer.from_pretrained(QA_MODEL_NAME_FR)
         QA_MODEL_FR = CamembertForQuestionAnswering.from_pretrained(
             QA_MODEL_NAME_FR)
-        QA_FR = pipeline('question-answering',
-                         model=QA_MODEL_FR, tokenizer=QA_TOK_FR)
+        QA_FR = QuestionAnsweringPipeline(
+            model=QA_MODEL_FR, tokenizer=QA_TOK_FR)
         QA_FR.save_pretrained(f'{WEIGHTS_PATH}/Camembert_Q_A')
         del QA_FR
         del QA_TOK_FR
@@ -103,8 +103,8 @@ def preload_weights():
         QA_TOK_EN = AutoTokenizer.from_pretrained(QA_MODEL_NAME_EN)
         QA_MODEL_EN = AutoModelForQuestionAnswering.from_pretrained(
             QA_MODEL_NAME_EN)
-        QA_EN = pipeline('question-answering',
-                         model=QA_MODEL_EN, tokenizer=QA_TOK_EN)
+        QA_EN = QuestionAnsweringPipeline(
+            model=QA_MODEL_EN, tokenizer=QA_TOK_EN)
         QA_EN.save_pretrained(f'{WEIGHTS_PATH}/Bert_Q_A')
         del QA_EN
         del QA_MODEL_EN

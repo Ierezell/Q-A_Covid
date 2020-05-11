@@ -1,11 +1,12 @@
 from transformers import (AutoModel, AutoModelForQuestionAnswering,
                           AutoTokenizer, CamembertForQuestionAnswering,
-                          pipeline)
+                          QuestionAnsweringPipeline)
 import os
 
 models = {
     "Camembert_Q_A": "illuin/camembert-large-fquad",
-    "Camembert": "camembert-base",
+    # "Camembert": "camembert-base",
+    "Camembert": "camembert/camembert-large",
     "Bert": "bert-large-uncased",
     "Bert_Q_A": "bert-large-uncased-whole-word-masking-finetuned-squad"
 }
@@ -19,8 +20,7 @@ if not os.path.exists("./weights/Camembert_Q_A/pytorch_model.bin"):
     QA_TOK_FR = AutoTokenizer.from_pretrained(QA_MODEL_NAME_FR)
     QA_MODEL_FR = CamembertForQuestionAnswering.from_pretrained(
         QA_MODEL_NAME_FR)
-    QA_FR = pipeline('question-answering',
-                     model=QA_MODEL_FR, tokenizer=QA_TOK_FR)
+    QA_FR = QuestionAnsweringPipeline(model=QA_MODEL_FR, tokenizer=QA_TOK_FR)
     QA_FR.save_pretrained("./weights/Camembert_Q_A")
     del QA_FR
     del QA_TOK_FR
@@ -40,8 +40,7 @@ if not os.path.exists("./weights/Bert_Q_A/pytorch_model.bin"):
     QA_TOK_EN = AutoTokenizer.from_pretrained(QA_MODEL_NAME_EN)
     QA_MODEL_EN = AutoModelForQuestionAnswering.from_pretrained(
         QA_MODEL_NAME_EN)
-    QA_EN = pipeline('question-answering',
-                     model=QA_MODEL_EN, tokenizer=QA_TOK_EN)
+    QA_EN = QuestionAnsweringPipeline(model=QA_MODEL_EN, tokenizer=QA_TOK_EN)
     QA_EN.save_pretrained("./weights/Bert_Q_A")
     del QA_EN
     del QA_MODEL_EN
